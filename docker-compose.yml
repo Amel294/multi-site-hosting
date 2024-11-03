@@ -1,0 +1,15 @@
+version: '3.8'  # Optional; you can remove it if deprecated
+services:
+  site1:
+    build:
+      context: ./site1
+    ports:
+      - "5173:4173"  # Maps container port 4173 to host port 5173
+    command: npm run preview -- --host 0.0.0.0  # Ensures it listens on all network interfaces
+
+  site2:
+    build:
+      context: ./site2
+    ports:
+      - "5174:4173"  # Maps container port 4173 to host port 5174
+    command: npm run preview -- --host 0.0.0.0  # Ensures it listens on all network interfaces
