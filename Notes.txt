@@ -1,0 +1,79 @@
+
+
+### Hosting Steps for Multiple Vite Sites - Without Docker (Wih Docker wil be added later)
+
+1. **Vite Configuration**:
+   - Both sites must run on different ports. Configurations in `vite.config.js`:
+     - **Site 1**: 
+       defineConfig({
+            server: {
+                port: 4173,
+            }})
+     - **Site 2**: 
+       defineConfig({
+             server: {
+                port: 4174,
+             }})
+
+2. **Nginx Configuration**:
+   - Create two configuration files in `/etc/nginx/sites-available/` for each site.
+
+3. **Building and Serving the Dist Folder**:
+   - Build using npm run build
+   - Copy the contents of the `dist` folder to the web server's document root:
+     sudo mkdir /var/www/site1
+     sudo cp -r ~/multi-site-hosting/site1/dist/* /var/www/site1/
+
+4. **Nginx Configuration for Built Projects**:
+   - Example configuration for Site 1:
+     server {
+         listen 80;
+         server_name site1.website.com;
+
+         root /var/www/site1;  
+         index index.html;
+
+         location / {
+             try_files $uri $uri/ /index.html;
+         }
+     }
+
+5. **Nginx Configuration for Non-Built Projects**:
+   - Example configuration for Site 2:
+     server {
+         listen 80;
+         server_name site2.website.com;
+
+         location / {
+             proxy_pass http://localhost:4174;  
+             proxy_http_version 1.1;
+             proxy_set_header Upgrade $http_upgrade;
+             proxy_set_header Connection 'upgrade';
+             proxy_set_header Host $host;
+             proxy_cache_bypass $http_upgrade;
+         }
+     }
+
+6. **Enabling Nginx Sites**:
+   - Create symbolic links to enable the sites:
+     sudo ln -s /etc/nginx/sites-available/site1 /etc/nginx/sites-enabled/
+
+7. **Permissions**:
+   - Ensure that Nginx has permission to access your site's files:
+     sudo chown -R www-data:www-data /var/www/site1
+     sudo chmod -R 755 /var/www/site1
+
+
+8. **PM2 Setup**:
+   - Install PM2 globally to manage Node.js applications:
+     sudo npm install -g pm2
+   - Start your Node.js application using PM2:
+     pm2 start your-app.js --name site2
+   - Ensure PM2 restarts on server reboot:
+     pm2 startup
+     pm2 save
+
+
+
+### Note:
+- All the above steps were accomplished without using Docker.
