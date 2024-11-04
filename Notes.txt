@@ -1,7 +1,7 @@
 
 
 ### Hosting Steps for Multiple Vite Sites - Without Docker (Wih Docker wil be added later)
-
+Link : https://gist.github.com/piyushgarg-dev/8b14c87c8ff4d626ecbc747b6b9fc57f  
 1. **Vite Configuration**:
    - Both sites must run on different ports. Configurations in `vite.config.js`:
      - **Site 1**: 
@@ -73,6 +73,38 @@
      pm2 startup
      pm2 save
 
+Here's a summary of the steps taken to secure the websites and enable HTTPS using Certbot and Nginx:
+
+### Step-by-Step Guide for Enabling HTTPS
+
+1. **Update the System:**
+   sudo apt update
+   - Ensures all package lists are updated.
+
+2. **Install Certbot and Nginx Plugin:**
+   sudo apt install certbot python3-certbot-nginx
+
+3. **Configure Firewall:**
+   sudo ufw allow 'Nginx Full'
+   sudo ufw delete allow 'Nginx HTTP'
+   - Opens ports for HTTPS (443) and closes HTTP (80) if necessary.
+
+4. **Run Certbot for SSL Certificate:**
+   sudo certbot --nginx -d site1.website.com -d site2.website.com
+   - Initiates the certificate request process, specifying both domains.
+   - Provides email and agrees to the terms of service.
+
+5. **Confirm Certificate Deployment:**
+   - Certbot automatically deploys the SSL certificate to the specified domains' Nginx configuration files.
+
+6. **Check Scheduled Auto-Renewal:**
+   sudo certbot renew --dry-run
+   - Simulates the renewal process to ensure it functions correctly.
+
+### Key Points:
+- Certificates are saved at `/etc/letsencrypt/live/` for each domain.
+- Certbot sets up an automated task to renew the certificates periodically.
+- The dry run confirms that the renewal will proceed without issues.
 
 
 ### Note:
