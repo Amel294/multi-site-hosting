@@ -109,3 +109,28 @@ Here's a summary of the steps taken to secure the websites and enable HTTPS usin
 
 ### Note:
 - All the above steps were accomplished without using Docker.
+
+
+
+Other
+
+Step 1: Install nvm (Node Version Manager)
+If nvm is not installed, follow these steps to install it:
+
+# Download and install nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.6/install.sh | bash
+
+# Load nvm into your current shell session
+source ~/.nvm/nvm.sh
+
+# Verify nvm is installed
+nvm --version
+If you get a version number, it means nvm is successfully installed.
+
+Step 2: Install the Latest LTS Version of Node.js Using nvm
+Now that you have nvm installed, use it to install the latest LTS (Long Term Support) version of Node.js:
+
+nvm install --lts
+nvm use --lts
+node -v
+npm -v
